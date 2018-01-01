@@ -1,0 +1,14 @@
+{
+ "version": "1.7.5",
+ "compilerOptions": {
+   "target": "ES6",
+   "module": "CommonJS",
+   "emitDecoratorMetadata": true,
+   "experimentalDecorators": true,
+   "outDir": "build"
+},
+"exclude": [
+   "node_modules",
+   "client"
+ ]
+}
