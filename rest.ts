@@ -1,6 +1,18 @@
 import * as express from 'express'
 import {mtrf} from './nooport'
-import {setsw, getsw} from './switch'
+import {getsw, setsw} from './switch'
+// import {lightsw, Switch} from './switch'
+/*
+function setsw (id: number, state) {
+	if (lightsw[id]) {	lightsw[id].setter(state) }
+	else { lightsw[id] = new Switch(id, state) }
+}
+
+function getsw (id: number) {
+	if (lightsw[id]) return lightsw[id].getter()
+	return false
+}
+*/
 
 //------------------------------------------------------------------------------
 // REST интерфейс к MTRF-64, функция вызывается через

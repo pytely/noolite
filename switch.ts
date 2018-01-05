@@ -1,5 +1,5 @@
 // (c) Алексей Телятников
-var lightsw: Array<Switch>
+var lightsw: Array<Switch> = []
 
 class Switch {
 	id: number
@@ -33,4 +33,5 @@ function getsw (id: number) {
 	return false
 }
 
+// export {lightsw, Switch}
 export {setsw, getsw}
