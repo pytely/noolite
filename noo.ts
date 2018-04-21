@@ -7,8 +7,8 @@ import * as rest from './rest'
 
 try {
 	mtrf[0] = new NooPort('MTRF','/dev/ttyS1')
-	console.log(mtrf[0])
-	console.log(mtrf[0].port)
+//	console.log(mtrf[0])
+//	console.log(mtrf[0].port)
 // Блок обработки запросов к нашему серверу
 	var app = express()
 	var router = express.Router()

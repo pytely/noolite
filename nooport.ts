@@ -26,7 +26,8 @@ class NooPort {
        })
     if (this.serport) {
       this.serport.on("data", (resp) => {
-        console.log("Serdata:" + Uint8Array.from(resp));
+        // console.log("Serdata:" + Uint8Array.from(resp));
+        return
       })
       this.serport.on("error", (resp) => {
         console.log("SerError:");
@@ -90,9 +91,9 @@ class NooPort {
 }
 //-------------- Отправка команды в MTRF-64 ------------------------------------
 function send(noo, cmnd) {
-  if (noo.serport != undefined && noo.serport.isOpen()) {
+  if (noo.serport && noo.serport.isOpen()) {
     if (noo.busyCounter > 3) noo.busy = false
-    console.log(noo.busy)
+    console.log('busy = ' + noo.busy)
     if (noo.busy) {
       setTimeout(send, 1000, noo, cmnd)
       noo.busyCounter++
@@ -105,15 +106,11 @@ function send(noo, cmnd) {
     noo.serport.write(buffer, (error) => {
       console.log("Buffer:" + buffer)
       noo.busy = true
-      if (error) {
-        console.log("Serial write error: "+ error)
-      }
+      if (error) console.log("Serial write error: "+ error)
     });
     noo.serport.drain( (error) => {
+      if (error) console.log("Serial drain error: "+ error)
       noo.busy = false
-      if (error) {
-        console.log("Serial drain error: "+ error)
-      }
     })
   }
 }
