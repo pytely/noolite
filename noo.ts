@@ -2,11 +2,12 @@
 import * as http from 'http'
 import * as bodyParser from 'body-parser' 	// модуль разборки апросов
 import * as express from 'express' 		// Продвинутый сервер для http запросов
-import { NooPort, mtrf}  from './nooport' //
-import * as rest from './rest'
+import * as rest from './src/router/rest'
+import { params } from './src/etc/params'
+
+var httpport = params.httpport
 
 try {
-	mtrf[0] = new NooPort('MTRF','/dev/ttyS1')
 //	console.log(mtrf[0])
 //	console.log(mtrf[0].port)
 // Блок обработки запросов к нашему серверу
@@ -18,8 +19,8 @@ try {
 
 // Блок запуска http сервера
 	var httpServer = http.createServer(app)		// для обработки http
-	console.log("Запуск веб серверов")
-	httpServer.listen(8125)			//   http  на 8125
+	console.log('Запуск сервера Noolite на порту ' + httpport)
+	httpServer.listen(httpport)
 } catch (err) {
 	console.log('Error: ' + err.message)
 }

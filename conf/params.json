@@ -1,0 +1,8 @@
+{
+  "httpPort":   "8125",
+  "httpsPort":  "8134",
+  "serport":    "/dev/ttyS1",
+  "name":       "NOOLITE server",
+  "cert":       "/etc/letsencrypt/live/pytely.homeip.net/fullchain.pem",
+  "key":        "/etc/letsencrypt/live/pytely.homeip.net/privkey.pem"
+}
