@@ -22,19 +22,22 @@ class NooPort {
   connect(): void {
     let cmnd = template.slice()
 
-    // cmnd[15] = 4
     if (this.serport != undefined) { return }
     this.serport = new SerialPort(this.port,
 	     { baudRate: baudrate, parser: SerialPort.parsers.byteLength(17) } )
     if (this.serport) {
-      // this.serport.on("data", (resp) => { return })
-      this.serport.on("error", (resp) => {
-        console.log("SerError:")
-        console.log(resp);
+      this.serport.on('data', (resp) => {
+        console.log('resp =' + JSON.stringify(nooArray(resp)))
+        return
+      })
+      this.serport.on('error', (resp) => {
+        console.log('SerError:')
+        console.log(resp)
       })
       // let cmnd = [171, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 172]
       cmnd[1] = 4
-      checksum(cmnd)
+      // checksum(cmnd) // для команды mode = 4 чексумму добовлять не нужно
+      // cmnd[15] = 4
       const buffer = Uint8Array.from(cmnd)
       this.serport.write(buffer, (err) => {
         this.busy = true
@@ -62,13 +65,14 @@ class NooPort {
   //-------------- вызов отправки команды в MTRF-64 ----------------------------
   send(cmnd: Array<number>) { send(this, cmnd) }
 }
+function nooArray(resp) { return resp.splice() }
 //-------------- Отправка команды в MTRF-64 ------------------------------------
 function send(noo: NooPort, cmnd: Array<number>) {
   if (noo.serport && noo.serport.isOpen()) {
-    if (noo.busyCounter > 3) noo.busy = false
+    if (noo.busyCounter > 5) noo.busy = false
     console.log('busy = ' + noo.busy)
     if (noo.busy) {
-      setTimeout(send, 1000, noo, cmnd)
+      setTimeout(send, 200, noo, cmnd)
       noo.busyCounter++
       return
     }
@@ -87,16 +91,20 @@ function send(noo: NooPort, cmnd: Array<number>) {
 }
 //------------------------------------------------------------------------------
 function checksum(cmnd): void {
-  for (let i=0; i<15; i++) { cmnd[15] += cmnd[i] }
+  for (let i=0; i<15; i++) cmnd[15] += cmnd[i]
+  cmnd[15] = cmnd[15] & 0xFF
 }
 //------------- Команда управления нагрузкой -----------------------------------
 // 0  - выключить
 // 2  - включить
 // 4  - переключить
 // 15 - привязать
-function WriteCmnd(addr:number, command:number): Array<number> {
+function WriteCmnd(addr:number, command:number, fm?: boolean): Array<number> {
   let cmnd = template.slice()
 
+  if (fm) {
+    cmnd[1] = 1
+  }
   cmnd[4] = Number(addr)
   cmnd[5] = Number(command)
   checksum(cmnd)
@@ -111,7 +119,6 @@ function ActivateCmnd(addr:number): Array<number> {
   cmnd[4] = Number(addr)
   checksum(cmnd)
   // for (let i=0; i<15; i++) { cmnd[15] += cmnd[i] }
-  for (let i=0; i<15; i++) { cmnd[15] += cmnd[i] }
   return cmnd
 }
 
